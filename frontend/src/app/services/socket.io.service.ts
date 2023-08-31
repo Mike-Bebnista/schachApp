@@ -35,11 +35,11 @@ export class SocketIoService {
     }
   }
 
-  getGameStateFromSocket(): Observable<{gameState: GameState, gameStateBoard: string}> {
+  getGameStateFromSocket(): Observable<{gameState: GameState, savedBoard: string}> {
     return new Observable((observer) => {
       if (this.socket) {
-        this.socket.on('gameStateVomSocket', ({ gameState, gameStateBoard }) => {
-          observer.next({gameState, gameStateBoard});
+        this.socket.on('gameStateVomSocket', ({ gameState, savedBoard }) => {
+          observer.next({gameState, savedBoard});
         });
       }
     });

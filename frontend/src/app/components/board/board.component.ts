@@ -27,10 +27,10 @@ export class BoardComponent implements OnInit{
     this.socketIoService.connect(this.gameId);
     this.recieveJoinedPlayers();
     
-    this.socketIoService.getGameStateFromSocket().subscribe(({ gameState, gameStateBoard }: { gameState: GameState, gameStateBoard: string }) => {
+    this.socketIoService.getGameStateFromSocket().subscribe(({ gameState, savedBoard }: { gameState: GameState, savedBoard: string }) => {
       //console.log('Vom Socket:' + JSON.stringify(gameState));
     //this.gameService.setGameState(gameState);
-    this.gameService.setGameStateBoard(gameStateBoard);
+    this.gameService.setGameStateBoard(savedBoard);
     });
   }
 
