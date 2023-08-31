@@ -5,21 +5,22 @@ const io = require('socket.io')(httpServer, {
     origins: ["*"]
 });
 
-const gameStates = new Map(); 
-//Auch versucht als Objekt, crasht aber trotzdem
-//const gameStates = {};
+
+let gameStatesBoard; //= "[[1,[\"Rook\",\"Black\"]],[2,[\"Knight\",\"Black\"]],[3,[\"Bishop\",\"Black\"]],[4,[\"Queen\",\"Black\"]],[5,[\"King\",\"Black\"]],[6,[\"Bishop\",\"Black\"]],[7,[\"Knight\",\"Black\"]],[8,[\"Rook\",\"Black\"]],[9,[\"Pawn\",\"Black\"]],[10,[\"Pawn\",\"Black\"]],[11,[\"Pawn\",\"Black\"]],[12,[\"Pawn\",\"Black\"]],[13,[\"Pawn\",\"Black\"]],[14,[\"Pawn\",\"Black\"]],[15,[\"Pawn\",\"Black\"]],[16,[\"Pawn\",\"Black\"]],[49,[\"Pawn\",\"White\"]],[50,[\"Pawn\",\"White\"]],[51,[\"Pawn\",\"White\"]],[52,[\"Pawn\",\"White\"]],[53,[\"Pawn\",\"White\"]],[54,[\"Pawn\",\"White\"]],[55,[\"Pawn\",\"White\"]],[56,[\"Pawn\",\"White\"]],[57,[\"Rook\",\"White\"]],[58,[\"Knight\",\"White\"]],[59,[\"Bishop\",\"White\"]],[60,[\"Queen\",\"White\"]],[61,[\"King\",\"White\"]],[62,[\"Bishop\",\"White\"]],[63,[\"Knight\",\"White\"]],[64,[\"Rook\",\"White\"]]]";
+let gameStates;
 
 io.on("connection", (socket) => {
     socket.on('joinGame', ({gameId}) => {
         socket.join(gameId);
         console.log("A player joined the room " + gameId);
         socket.to(gameId).emit('joinGame', "A player joined the game!");
-        socket.on('updateGameStateBackend', ({gameState}) => {
-            gameStates.set(gameState); 
-            //Hier dann auch als Objekt gesetzt
-            //gameStates[gameId] = gameState;
-            console.log('gameState im Socket:' + JSON.stringify(gameState));
-            io.emit('gameStateVomSocket', { gameState });
+        //io.emit('gameStateVomSocket', { gameStates, gameStatesBoard });
+        socket.on('updateGameStateBackend', ({gameState, gameStateBoard}) => {
+            gameStatesBoard = gameStateBoard;
+            gameStates = gameState;
+            //console.log('gameState im Socket:' + JSON.stringify(gameStates));
+            //console.log('gameStateBoard im Socket:' + JSON.stringify(gameStatesBoard));
+            io.emit('gameStateVomSocket', { gameState, gameStateBoard }); //gameStates und gameStatesBoard will nicht wegen JSON
         })
     });
 });
