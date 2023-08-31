@@ -1,0 +1,19 @@
+<div>
+    <button (click)="onSelectPiece(piecesEnum.Queen)">
+      <img [src]="getImageSrc(piecesEnum.Queen)"
+           [alt]="getImageAlt(piecesEnum.Queen)">
+    </button>
+    <button (click)="onSelectPiece(piecesEnum.Rook)">
+      <img [src]="getImageSrc(piecesEnum.Rook)"
+           [alt]="getImageAlt(piecesEnum.Rook)">
+    </button>
+    <button (click)="onSelectPiece(piecesEnum.Bishop)">
+      <img [src]="getImageSrc(piecesEnum.Bishop)"
+           [alt]="getImageAlt(piecesEnum.Bishop)">
+    </button>
+    <button (click)="onSelectPiece(piecesEnum.Knight)">
+      <img [src]="getImageSrc(piecesEnum.Knight)"
+           [alt]="getImageAlt(piecesEnum.Knight)">
+    </button>
+  </div>
+  
