@@ -14,7 +14,7 @@ io.on("connection", (socket) => {
         socket.join(gameId);
         console.log("A player joined the room " + gameId);
         socket.to(gameId).emit('joinGame', "A player joined the game!");
-        //io.emit('gameStateVomSocket', { gameStates, gameStatesBoard });
+        //io.emit('gameStateVomSocket', { savedGameStates, savedGameStatesBoard });
         socket.on('updateGameStateBackend', ({gameState, gameStateBoard}) => {
             savedGameStatesBoard = gameStateBoard;
             savedGameStates = gameState;
