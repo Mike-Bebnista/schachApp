@@ -25,7 +25,7 @@ export class GameService {
   });
 
   constructor(private dialog: Dialog) {
-  } 
+  }
 
   get activeColor$(): Observable<Colors> {
     return this.gameStateSubject.asObservable()
@@ -131,7 +131,7 @@ export class GameService {
       availableMoves,
       selectedSquare,
     });
-    //console.log('gameState im GameService:', JSON.stringify(this.gameStateSubject.getValue()));
+    console.log('gameState im GameService:', JSON.stringify(this.gameStateSubject.getValue()));
   }
 
   private checkIsPawnPromoting(board: BoardMap,
@@ -160,11 +160,13 @@ export class GameService {
     return this.boardMapToString(this.gameStateSubject.value.board);
   }
 
-  setGameState(gameState: GameState){
-    this.gameStateSubject.next(gameState);
+  setGameState(gameState: GameState) {
+    //this.gameStateSubject.next(gameState);
+    const currentState = this.gameStateSubject.getValue();
+    currentState.active = gameState.active;
   }
 
-  setGameStateBoard(gameStateBoard: string){
+  setGameStateBoard(gameStateBoard: string) {
     const boardMap = this.stringToBoardMap(gameStateBoard);
     const currentState = this.gameStateSubject.getValue();
     currentState.board = boardMap;

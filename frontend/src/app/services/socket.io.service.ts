@@ -10,15 +10,15 @@ import { GameState } from '../models/game-state.model';
 export class SocketIoService {
 
   socket: Socket | undefined;
-  
-  constructor() {}
 
-  connect(gameId: string){
+  constructor() { }
+
+  connect(gameId: string) {
     this.socket = io(environment.SOCKET_ENDPOINT);
-    this.socket.emit('joinGame', {gameId: gameId});
+    this.socket.emit('joinGame', { gameId: gameId });
   }
 
-  receivedJoinedPlayers(): Observable<string>{
+  receivedJoinedPlayers(): Observable<string> {
     return new Observable((observer) => {
       if (this.socket) {
         this.socket.on('joinGame', (message: string) => {
@@ -30,16 +30,16 @@ export class SocketIoService {
 
   updateGameStateBackend(data: { gameState: any, gameStateBoard: string }): void {
     if (this.socket) {
-        this.socket.emit('updateGameStateBackend', data);
-        //console.log('Zum Socket geschickt: ' + JSON.stringify(data));
+      this.socket.emit('updateGameStateBackend', data);
+      //console.log('Zum Socket geschickt: ' + JSON.stringify(data));
     }
   }
 
-  getGameStateFromSocket(): Observable<{gameState: GameState, savedBoard: string}> {
+  getGameStateFromSocket(): Observable<{ savedGameState: GameState, savedBoard: string }> {
     return new Observable((observer) => {
       if (this.socket) {
-        this.socket.on('gameStateVomSocket', ({ gameState, savedBoard }) => {
-          observer.next({gameState, savedBoard});
+        this.socket.on('gameStateVomSocket', ({ savedGameState, savedBoard }) => {
+          observer.next({ savedGameState, savedBoard });
         });
       }
     });

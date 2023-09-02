@@ -7,20 +7,18 @@ const io = require('socket.io')(httpServer, {
 
 
 let savedBoard = "[[1,[\"Rook\",\"Black\"]],[2,[\"Knight\",\"Black\"]],[3,[\"Bishop\",\"Black\"]],[4,[\"Queen\",\"Black\"]],[5,[\"King\",\"Black\"]],[6,[\"Bishop\",\"Black\"]],[7,[\"Knight\",\"Black\"]],[8,[\"Rook\",\"Black\"]],[9,[\"Pawn\",\"Black\"]],[10,[\"Pawn\",\"Black\"]],[11,[\"Pawn\",\"Black\"]],[12,[\"Pawn\",\"Black\"]],[13,[\"Pawn\",\"Black\"]],[14,[\"Pawn\",\"Black\"]],[15,[\"Pawn\",\"Black\"]],[16,[\"Pawn\",\"Black\"]],[49,[\"Pawn\",\"White\"]],[50,[\"Pawn\",\"White\"]],[51,[\"Pawn\",\"White\"]],[52,[\"Pawn\",\"White\"]],[53,[\"Pawn\",\"White\"]],[54,[\"Pawn\",\"White\"]],[55,[\"Pawn\",\"White\"]],[56,[\"Pawn\",\"White\"]],[57,[\"Rook\",\"White\"]],[58,[\"Knight\",\"White\"]],[59,[\"Bishop\",\"White\"]],[60,[\"Queen\",\"White\"]],[61,[\"King\",\"White\"]],[62,[\"Bishop\",\"White\"]],[63,[\"Knight\",\"White\"]],[64,[\"Rook\",\"White\"]]]";
-let savedGameState;
+let savedGameState = '{"board":{},"active":"White","history":[{"count":0,"from":0,"to":0,"action":null,"state":{}}],"availableMoves":[],"selectedSquare":null}';
 
 io.on("connection", (socket) => {
-    socket.on('joinGame', ({gameId}) => {
+    socket.on('joinGame', ({ gameId }) => {
         socket.join(gameId);
         console.log("A player joined the room " + gameId);
         socket.to(gameId).emit('joinGame', "A player joined the game!");
-        io.emit('gameStateVomSocket', { savedGameState, savedBoard });
-        socket.on('updateGameStateBackend', ({gameState, gameStateBoard}) => {
+        //io.emit('gameStateVomSocket', { savedGameState, savedBoard }); //Geht aktuell nicht, da das gespeicherte aus Zeile 10 falsch zu sein scheint.
+        socket.on('updateGameStateBackend', ({ gameState, gameStateBoard }) => {
             savedGameState = gameState;
             savedBoard = gameStateBoard;
-            console.log('savedBoard: ' + savedBoard)
-            console.log('gameStateBoard: ' + gameStateBoard)
-            io.emit('gameStateVomSocket', { gameState, savedBoard });
+            io.emit('gameStateVomSocket', { savedGameState, savedBoard });
         })
     });
 });

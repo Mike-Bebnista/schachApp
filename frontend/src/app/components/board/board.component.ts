@@ -10,138 +10,34 @@ import { GameService } from 'src/app/services/game.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements OnInit{
+export class BoardComponent implements OnInit {
   gameId: string = '';
 
   readonly boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
 
   constructor(
-    private socketIoService: SocketIoService, 
+    private socketIoService: SocketIoService,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private gameService: GameService
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
     this.socketIoService.connect(this.gameId);
     this.recieveJoinedPlayers();
     
-    this.socketIoService.getGameStateFromSocket().subscribe(({ gameState, savedBoard }: { gameState: GameState, savedBoard: string }) => {
-      //console.log('Vom Socket:' + JSON.stringify(gameState));
-    //this.gameService.setGameState(gameState);
-    this.gameService.setGameStateBoard(savedBoard);
+    this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
+      this.gameService.setGameState(savedGameState);
+      this.gameService.setGameStateBoard(savedBoard);
     });
   }
 
-  recieveJoinedPlayers(){
-    this.socketIoService.receivedJoinedPlayers().subscribe((message: string) =>{
+  recieveJoinedPlayers() {
+    this.socketIoService.receivedJoinedPlayers().subscribe((message: string) => {
       this.snackbar.open(message, '', {
         duration: 1500,
       })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
     })
   }
 }
