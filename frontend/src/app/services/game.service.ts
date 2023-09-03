@@ -131,7 +131,6 @@ export class GameService {
       availableMoves,
       selectedSquare,
     });
-    console.log('gameState im GameService:', JSON.stringify(this.gameStateSubject.getValue()));
   }
 
   private checkIsPawnPromoting(board: BoardMap,
@@ -161,9 +160,12 @@ export class GameService {
   }
 
   setGameState(gameState: GameState) {
-    //this.gameStateSubject.next(gameState);
     const currentState = this.gameStateSubject.getValue();
+    if (gameState.active == undefined) {
+      gameState.active = Colors.White;
+    }
     currentState.active = gameState.active;
+    this.gameStateSubject.next(currentState);
   }
 
   setGameStateBoard(gameStateBoard: string) {

@@ -26,10 +26,11 @@ export class BoardComponent implements OnInit {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
     this.socketIoService.connect(this.gameId);
     this.recieveJoinedPlayers();
-    
+
     this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
       this.gameService.setGameState(savedGameState);
       this.gameService.setGameStateBoard(savedBoard);
+      console.log("Gamestate bekommen " + performance.now())
     });
   }
 
