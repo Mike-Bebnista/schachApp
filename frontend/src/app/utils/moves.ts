@@ -3,7 +3,6 @@ import { BoardMap } from '../models/game-state.model';
 import { Pieces } from '../models/pieces.enum';
 import { Colors } from '../models/colors.enum';
 import { rankAndFile, squareNumber } from './board';
-import { SocketIoService } from 'src/app/services/socket.io.service';
 
 enum Directions {
   North,
@@ -13,10 +12,10 @@ enum Directions {
 }
 
 function generateHistoryMoveEntry(history: HistoryMove[],
-                                  board: BoardMap,
-                                  from: number,
-                                  to: number,
-                                  action: MoveActions): HistoryMove {
+  board: BoardMap,
+  from: number,
+  to: number,
+  action: MoveActions): HistoryMove {
   const last = history[history.length - 1];
 
   return {
@@ -29,11 +28,11 @@ function generateHistoryMoveEntry(history: HistoryMove[],
 }
 
 function calculatePawnMoves(board: BoardMap,
-                            history: HistoryMove[],
-                            color: Colors,
-                            rank: number,
-                            file: number,
-                            squareNum: number): Move[] {
+  history: HistoryMove[],
+  color: Colors,
+  rank: number,
+  file: number,
+  squareNum: number): Move[] {
   const initialRank = color === Colors.White ? 7 : 2;
   const delta = color === Colors.White ? -8 : 8;
   const captureDeltas: number[] = [];
@@ -75,7 +74,8 @@ function calculatePawnMoves(board: BoardMap,
   if (!!lastEntry
     && board.get(lastEntry.to)?.[0] === Pieces.Pawn
     && Math.abs(lastEntry.to - lastEntry.from) === 16
-    && rankAndFile(lastEntry.to)?.rank === rank) {
+    && rankAndFile(lastEntry.to)?.rank === rank
+    && Math.abs(lastEntry.to - squareNum) === 1) {
     moves.push({
       square: lastEntry.to + (color === Colors.White ? -8 : 8),
       action: MoveActions.EnPassant,
@@ -86,10 +86,10 @@ function calculatePawnMoves(board: BoardMap,
 }
 
 function calculateKnightMoves(board: BoardMap,
-                              color: Colors,
-                              rank: number,
-                              file: number,
-                              squareNum: number): Move[] {
+  color: Colors,
+  rank: number,
+  file: number,
+  squareNum: number): Move[] {
   let deltas: number[] = [];
   const moves: Move[] = [];
 
@@ -138,11 +138,11 @@ function calculateKnightMoves(board: BoardMap,
 }
 
 function calculateBishopMoves(board: BoardMap,
-                              color: Colors,
-                              rank: number,
-                              file: number,
-                              squareNum: number,
-                              once = false): Move[] {
+  color: Colors,
+  rank: number,
+  file: number,
+  squareNum: number,
+  once = false): Move[] {
   let deltas: number[] = [];
   const moves: Move[] = [];
 
@@ -198,11 +198,11 @@ function calculateBishopMoves(board: BoardMap,
 }
 
 function calculateRookMoves(board: BoardMap,
-                            color: Colors,
-                            rank: number,
-                            file: number,
-                            squareNum: number,
-                            once = false): Move[] {
+  color: Colors,
+  rank: number,
+  file: number,
+  squareNum: number,
+  once = false): Move[] {
   const deltas: { delta: number, direction: Directions }[] = [];
 
   if (rank !== 1) {
@@ -271,10 +271,10 @@ function calculateRookMoves(board: BoardMap,
 }
 
 function calculateQueenMoves(board: BoardMap,
-                             color: Colors,
-                             rank: number,
-                             file: number,
-                             squareNum: number): Move[] {
+  color: Colors,
+  rank: number,
+  file: number,
+  squareNum: number): Move[] {
   const b = calculateBishopMoves(board, color, rank, file, squareNum);
   const r = calculateRookMoves(board, color, rank, file, squareNum);
 
@@ -282,11 +282,11 @@ function calculateQueenMoves(board: BoardMap,
 }
 
 function calculateKingMoves(board: BoardMap,
-                            history: HistoryMove[],
-                            color: Colors,
-                            rank: number,
-                            file: number,
-                            squareNum: number): Move[] {
+  history: HistoryMove[],
+  color: Colors,
+  rank: number,
+  file: number,
+  squareNum: number): Move[] {
   const b = calculateBishopMoves(board, color, rank, file, squareNum, true);
   const r = calculateRookMoves(board, color, rank, file, squareNum, true);
   const moves = [...b, ...r];
@@ -313,20 +313,20 @@ function calculateKingMoves(board: BoardMap,
     });
   const canLongCastle = inBetweenLongSquareNums.every(b => !board.get(b))
     && history.every(entry => {
-    const kingSquareNum = isWhite ? 61 : 5;
-    const rookSquareNum = isWhite ? 57 : 1;
+      const kingSquareNum = isWhite ? 61 : 5;
+      const rookSquareNum = isWhite ? 57 : 1;
 
-    const supposedKingSquare = entry.state.get(kingSquareNum);
-    const kingOk = !!supposedKingSquare
-      && supposedKingSquare[0] === Pieces.King
-      && supposedKingSquare[1] === color;
-    const supposedRookSquare = entry.state.get(rookSquareNum);
-    const rookOk = !!supposedRookSquare
-      && supposedRookSquare[0] === Pieces.Rook
-      && supposedRookSquare[1] === color;
+      const supposedKingSquare = entry.state.get(kingSquareNum);
+      const kingOk = !!supposedKingSquare
+        && supposedKingSquare[0] === Pieces.King
+        && supposedKingSquare[1] === color;
+      const supposedRookSquare = entry.state.get(rookSquareNum);
+      const rookOk = !!supposedRookSquare
+        && supposedRookSquare[0] === Pieces.Rook
+        && supposedRookSquare[1] === color;
 
-    return kingOk && rookOk;
-  });
+      return kingOk && rookOk;
+    });
 
   if (canShortCastle) {
     moves.push({
@@ -345,10 +345,10 @@ function calculateKingMoves(board: BoardMap,
 }
 
 function filterPseudoLegalMoves(board: BoardMap,
-                                history: HistoryMove[],
-                                color: Colors,
-                                moves: Move[],
-                                toMoveSquare: { rank: number, file: number })
+  history: HistoryMove[],
+  color: Colors,
+  moves: Move[],
+  toMoveSquare: { rank: number, file: number })
   : Move[] {
   const oppositeColor = color === Colors.White ? Colors.Black : Colors.White;
 
@@ -399,10 +399,10 @@ function filterPseudoLegalMoves(board: BoardMap,
 }
 
 export function calculateLegalMoves(board: BoardMap,
-                                    history: HistoryMove[],
-                                    rank: number,
-                                    file: number,
-                                    fullDepth = true): Move[] {
+  history: HistoryMove[],
+  rank: number,
+  file: number,
+  fullDepth = true): Move[] {
   const squareNum = squareNumber(rank, file);
   const [piece, color] = board.get(squareNum)!;
 
@@ -443,11 +443,11 @@ export function calculateLegalMoves(board: BoardMap,
 }
 
 export function makeMove(board: BoardMap,
-                         availableMoves: Move[],
-                         history: HistoryMove[],
-                         color: Colors,
-                         toMoveSquareNum: number,
-                         prevSelectedSquare: { rank: number, file: number })
+  availableMoves: Move[],
+  history: HistoryMove[],
+  color: Colors,
+  toMoveSquareNum: number,
+  prevSelectedSquare: { rank: number, file: number })
   : { board: BoardMap, entry: HistoryMove } {
   const prevSquare = squareNumber(
     prevSelectedSquare.rank,
@@ -495,9 +495,9 @@ export function makeMove(board: BoardMap,
 }
 
 export function promote(board: BoardMap,
-                        history: HistoryMove[],
-                        squareNum: number,
-                        piece: Pieces)
+  history: HistoryMove[],
+  squareNum: number,
+  piece: Pieces)
   : { board: BoardMap, entry: HistoryMove } {
   const newBoard = new Map(board);
 
