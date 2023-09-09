@@ -12,8 +12,8 @@ import { GameService } from 'src/app/services/game.service';
 })
 export class BoardComponent implements OnInit {
   gameId: string = '';
-
-  readonly boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
+  
+  boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
 
   constructor(
     private socketIoService: SocketIoService,
@@ -32,7 +32,6 @@ export class BoardComponent implements OnInit {
       this.gameService.setGameStateBoard(savedBoard);
       console.log("Gamestate bekommen " + performance.now())
     });
-    this.newGame();
   }
 
   recieveJoinedPlayers() {
@@ -45,5 +44,9 @@ export class BoardComponent implements OnInit {
 
   newGame() {
     this.socketIoService.newGame(this.gameId);
+  }
+
+  flipBoard() {
+    this.boardDirectionArray.reverse();
   }
 }
