@@ -1,4 +1,11 @@
 .board {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-}  
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}

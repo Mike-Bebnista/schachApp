@@ -32,6 +32,7 @@ export class BoardComponent implements OnInit {
       this.gameService.setGameStateBoard(savedBoard);
       console.log("Gamestate bekommen " + performance.now())
     });
+    this.newGame();
   }
 
   recieveJoinedPlayers() {
@@ -40,5 +41,9 @@ export class BoardComponent implements OnInit {
         duration: 1500,
       })
     })
+  }
+
+  newGame() {
+    this.socketIoService.newGame(this.gameId);
   }
 }

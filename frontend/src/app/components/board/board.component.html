@@ -1,7 +1,10 @@
 <div class="board">
-    <ng-container *ngFor="let rank of boardDirectionArray">
-      <ng-container *ngFor="let file of boardDirectionArray">
-        <app-square [rank]="rank" [file]="file"></app-square>
-      </ng-container>
+  <ng-container *ngFor="let rank of boardDirectionArray">
+    <ng-container *ngFor="let file of boardDirectionArray">
+      <app-square [rank]="rank" [file]="file"></app-square>
     </ng-container>
-  </div>
+  </ng-container>
+</div>
+<div class="boxNewGame">
+  <button mat-raised-button (click)="newGame()">New Game</button>
+</div>

@@ -28,6 +28,13 @@ export class SocketIoService {
     });
   }
 
+  newGame(gameId: string) {
+    if (this.socket) {
+      this.socket.emit('newGame', { gameId: gameId })
+      console.log('Jemand hat New Game gedrückt')
+    }
+  }
+
   updateGameStateBackend(data: { gameState: any, gameStateBoard: string }): void {
     if (this.socket) {
       this.socket.emit('updateGameStateBackend', data);
