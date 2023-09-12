@@ -51,4 +51,14 @@ export class SocketIoService {
       }
     });
   }
+
+  geUpdateTimers(): Observable<{ whiteTimer: number, blackTimer: number }> {
+    return new Observable((observer) => {
+      if (this.socket) {
+        this.socket.on('updateTimers', ({ whiteTimer, blackTimer }) => {
+          observer.next({ whiteTimer, blackTimer });
+        });
+      }
+    });
+  }
 }

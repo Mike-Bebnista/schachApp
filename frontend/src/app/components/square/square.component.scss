@@ -46,15 +46,15 @@
     }
 
     >.capture {
-        width: 40px;
-        height: 40px;
+        width: 50%;
+        height: 50%;
         background-color: transparent;
-        border: 6px solid white;
+        border: 10px solid #20580f;
     }
 
     >.move {
-        width: 16px;
-        height: 16px;
-        background-color: white;
+        width: 30%;
+        height: 30%;
+        background-color: #20580f;
     }
 }

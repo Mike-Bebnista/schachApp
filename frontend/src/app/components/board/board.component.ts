@@ -10,10 +10,15 @@ import { GameService } from 'src/app/services/game.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
+
 export class BoardComponent implements OnInit {
   gameId: string = '';
-  
   boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
+  whiteTimerFront: number = 180000;
+  blackTimerFront: number = 180000;
+  timerInterval: any;
+  whiteTimerInterval: any;
+  blackTimerInterval: any;
 
   constructor(
     private socketIoService: SocketIoService,
@@ -31,7 +36,16 @@ export class BoardComponent implements OnInit {
       this.gameService.setGameState(savedGameState);
       this.gameService.setGameStateBoard(savedBoard);
       console.log("Gamestate bekommen " + performance.now())
+
+      this.socketIoService.geUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
+        this.whiteTimerFront = whiteTimer;
+        this.blackTimerFront = blackTimer;
+      });
+      this.startTimer(savedGameState);
     });
+  }
+  ngOnDestroy(): void {
+    clearInterval(this.timerInterval);
   }
 
   recieveJoinedPlayers() {
@@ -48,5 +62,29 @@ export class BoardComponent implements OnInit {
 
   flipBoard() {
     this.boardDirectionArray.reverse();
+  }
+
+  startTimer(savedGameState: GameState) {
+    clearInterval(this.whiteTimerInterval);
+    clearInterval(this.blackTimerInterval);
+    if (savedGameState.active === 'Black' && this.blackTimerFront > 0) {
+      this.blackTimerInterval = setInterval(() => {
+        this.blackTimerFront -= 1000;
+        if (this.blackTimerFront <= 0) {
+          clearInterval(this.blackTimerInterval);
+          this.blackTimerInterval = 0;
+          this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
+        }
+      }, 1000);
+    } else if (savedGameState.active === 'White' && this.whiteTimerFront > 0) {
+      this.whiteTimerInterval = setInterval(() => {
+        this.whiteTimerFront -= 1000;
+        if (this.whiteTimerFront <= 0) {
+          clearInterval(this.whiteTimerInterval);
+          this.whiteTimerInterval = 0;
+          this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
+        }
+      }, 1000);
+    }
   }
 }
