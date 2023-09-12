@@ -16,8 +16,8 @@ export class BoardComponent implements OnInit {
   boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
   whiteTimerFront: number = 0;
   blackTimerFront: number = 0;
-  whiteTimer: number =  9999999999 //Die wahre Zeit
-  blackTimer: number =  9999999999// Die wahre Zeit
+  whiteBoardTimer: number = 0;
+  blackBoardTimer: number = 0;
   timerInterval: any;
   whiteTimerInterval: any;
   blackTimerInterval: any;
@@ -42,10 +42,10 @@ export class BoardComponent implements OnInit {
       this.socketIoService.geUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;
-        console.log('Whitetimer: ' + whiteTimer)
-        console.log('Blacktimer: ' + blackTimer)
+        this.whiteBoardTimer = whiteTimer
+        this.blackBoardTimer = blackTimer
+        this.startTimer(savedGameState);
       });
-      this.startTimer(savedGameState);
     });
   }
 
@@ -74,30 +74,40 @@ export class BoardComponent implements OnInit {
   startTimer(savedGameState: GameState) {
     clearInterval(this.whiteTimerInterval);
     clearInterval(this.blackTimerInterval);
-    if (savedGameState.active === 'Black' && this.blackTimer > 0) {
+    if (savedGameState.active === 'Black' && this.blackBoardTimer > 0) {
       this.blackTimerInterval = setInterval(() => {
-        this.blackTimerFront -= 1000;
+        this.blackTimerFront -= 10;
         if (this.blackTimerFront <= 0) {
           clearInterval(this.blackTimerInterval);
           this.blackTimerFront = 0;
         }
-      }, 1000);
-    } else if (savedGameState.active === 'White' && this.whiteTimer > 0) {
+      }, 10);
+    } else if (savedGameState.active === 'White' && this.whiteBoardTimer > 0) {
       this.whiteTimerInterval = setInterval(() => {
-        this.whiteTimerFront -= 1000;
+        this.whiteTimerFront -= 10;
         if (this.whiteTimerFront <= 0) {
           clearInterval(this.whiteTimerInterval);
           this.whiteTimerFront = 0;
         }
-      }, 1000);
-    } else if (this.blackTimer <= 0 ){
+      }, 10);
+    } else if (this.blackBoardTimer <= 0) {
       clearInterval(this.blackTimerInterval);
       this.blackTimerFront = 0;
       this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
-    } else if (this.whiteTimer <= 0){
+    } else if (this.whiteBoardTimer <= 0) {
       clearInterval(this.whiteTimerInterval);
       this.whiteTimerFront = 0;
-      this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
+      this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
     }
+  }
+
+  formatTime(whiteTimerFront: number) {
+    const minutes = Math.floor(whiteTimerFront / 60000);
+    const seconds = Math.floor((whiteTimerFront % 60000) / 1000);
+    const milliseconds = whiteTimerFront % 1000;
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+    const formattedMilliseconds = String(milliseconds).padStart(3, '0');
+    return formattedMinutes + ':' + formattedSeconds + ':' + formattedMilliseconds;
   }
 }
