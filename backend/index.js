@@ -50,6 +50,7 @@ function startNextPlayerTimer() {
             blackTimer -= 1;
             if (blackTimer <= 0) {
                 blackTimer = 0;
+                io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
             }
         }, 1);
     } else if (savedGameState.active === 'White') {
@@ -57,6 +58,7 @@ function startNextPlayerTimer() {
             whiteTimer -= 1;
             if (whiteTimer <= 0) {
                 whiteTimer = 0;
+                io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
             }
         }, 1);
     }
