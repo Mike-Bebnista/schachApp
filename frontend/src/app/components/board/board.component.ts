@@ -16,6 +16,8 @@ export class BoardComponent implements OnInit {
   boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
   whiteTimerFront: number = 180000;
   blackTimerFront: number = 180000;
+  whiteTimer: number =  180000 //Die wahre Zeit
+  blackTimer: number =  180000 // Die wahre Zeit
   timerInterval: any;
   whiteTimerInterval: any;
   blackTimerInterval: any;
@@ -67,24 +69,30 @@ export class BoardComponent implements OnInit {
   startTimer(savedGameState: GameState) {
     clearInterval(this.whiteTimerInterval);
     clearInterval(this.blackTimerInterval);
-    if (savedGameState.active === 'Black' && this.blackTimerFront > 0) {
+    if (savedGameState.active === 'Black' && this.blackTimer > 0) {
       this.blackTimerInterval = setInterval(() => {
         this.blackTimerFront -= 1000;
         if (this.blackTimerFront <= 0) {
           clearInterval(this.blackTimerInterval);
-          this.blackTimerInterval = 0;
-          this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
+          this.blackTimerFront = 0;
         }
       }, 1000);
-    } else if (savedGameState.active === 'White' && this.whiteTimerFront > 0) {
+    } else if (savedGameState.active === 'White' && this.whiteTimer > 0) {
       this.whiteTimerInterval = setInterval(() => {
         this.whiteTimerFront -= 1000;
         if (this.whiteTimerFront <= 0) {
           clearInterval(this.whiteTimerInterval);
-          this.whiteTimerInterval = 0;
-          this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
+          this.whiteTimerFront = 0;
         }
       }, 1000);
+    } else if (this.blackTimer <= 0 ){
+      clearInterval(this.blackTimerInterval);
+      this.blackTimerFront = 0;
+      this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
+    } else if (this.whiteTimer <= 0){
+      clearInterval(this.blackTimerInterval);
+      this.whiteTimerFront = 0;
+      this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
     }
   }
 }

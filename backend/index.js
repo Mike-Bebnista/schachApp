@@ -18,15 +18,17 @@ io.on("connection", (socket) => {
         socket.join(gameId);
         console.log("A player joined the room " + gameId);
         socket.to(gameId).emit('joinGame', "A player joined the game!");
-        emitGameStateAndTimers(gameId);
+        io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
+        io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
         socket.on('updateGameStateBackend', ({ gameState, gameStateBoard }) => {
             backendTime = performance.now();
 
             savedGameState = gameState;
             savedBoard = gameStateBoard;
 
-            startNextPlayerTimer();
-            emitGameStateAndTimers(gameId);
+            startNextPlayerTimer(gameId);
+            io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
+            io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
 
             backendTime = performance.now() - backendTime;
             console.log('Backend Zeit: ' + backendTime + ' Millisekunden.')
@@ -38,11 +40,12 @@ io.on("connection", (socket) => {
         let savedGameState = { "board": {}, "active": "White", "history": [{ "count": 0, "from": 0, "to": 0, "action": null, "state": {} }], "availableMoves": [{}, {}], "selectedSquare": {} };
         let whiteTimer = 180000;
         let blackTimer = 180000;
-        emitGameStateAndTimers(gameId);
+        io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
+        io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
     })
 });
 
-function startNextPlayerTimer() {
+function startNextPlayerTimer(gameId) {
     clearInterval(whiteTimerInterval);
     clearInterval(blackTimerInterval);
     if (savedGameState.active === 'Black' ) {
@@ -62,11 +65,6 @@ function startNextPlayerTimer() {
             }
         }, 1);
     }
-}
-
-function emitGameStateAndTimers(gameId) {
-    io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
-    io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
 }
 
 const PORT = process.env.PORT || 3000;
