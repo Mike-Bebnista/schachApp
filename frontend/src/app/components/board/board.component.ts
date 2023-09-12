@@ -14,10 +14,10 @@ import { GameService } from 'src/app/services/game.service';
 export class BoardComponent implements OnInit {
   gameId: string = '';
   boardDirectionArray = new Array(8).fill(0).map((_, i) => i + 1);
-  whiteTimerFront: number = 180000;
-  blackTimerFront: number = 180000;
-  whiteTimer: number =  180000 //Die wahre Zeit
-  blackTimer: number =  180000 // Die wahre Zeit
+  whiteTimerFront: number = 0;
+  blackTimerFront: number = 0;
+  whiteTimer: number =  9999999999 //Die wahre Zeit
+  blackTimer: number =  9999999999// Die wahre Zeit
   timerInterval: any;
   whiteTimerInterval: any;
   blackTimerInterval: any;
@@ -42,10 +42,13 @@ export class BoardComponent implements OnInit {
       this.socketIoService.geUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;
+        console.log('Whitetimer: ' + whiteTimer)
+        console.log('Blacktimer: ' + blackTimer)
       });
       this.startTimer(savedGameState);
     });
   }
+
   ngOnDestroy(): void {
     clearInterval(this.timerInterval);
   }
@@ -60,6 +63,8 @@ export class BoardComponent implements OnInit {
 
   newGame() {
     this.socketIoService.newGame(this.gameId);
+    this.whiteTimerFront = 180000
+    this.blackTimerFront = 180000
   }
 
   flipBoard() {
@@ -90,7 +95,7 @@ export class BoardComponent implements OnInit {
       this.blackTimerFront = 0;
       this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
     } else if (this.whiteTimer <= 0){
-      clearInterval(this.blackTimerInterval);
+      clearInterval(this.whiteTimerInterval);
       this.whiteTimerFront = 0;
       this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
     }
