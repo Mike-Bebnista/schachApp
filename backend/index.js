@@ -52,26 +52,28 @@ io.on("connection", (socket) => {
 function startNextPlayerTimer(gameId) {
     clearInterval(whiteTimerInterval);
     clearInterval(blackTimerInterval);
-    if (savedGameState.active === 'Black') {
-        blackTimerInterval = setInterval(() => {
-            blackTimer -= 10;
-            if (blackTimer <= 0 && blackLost == false) {
-                clearInterval(blackTimerInterval);
-                blackTimer = 0;
-                io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
-                blackLost = true;
-            }
-        }, 10);
-    } else if (savedGameState.active === 'White') {
-        whiteTimerInterval = setInterval(() => {
-            whiteTimer -= 10;
-            if (whiteTimer <= 0 && whiteLost == false) {
-                clearInterval(whiteTimerInterval);
-                whiteTimer = 0;
-                io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
-                whiteLost = true;
-            }
-        }, 10);
+    if (savedGameState.history.length >= 2) {
+        if (savedGameState.active === 'Black') {
+            blackTimerInterval = setInterval(() => {
+                blackTimer -= 10;
+                if (blackTimer <= 0 && blackLost == false) {
+                    clearInterval(blackTimerInterval);
+                    blackTimer = 0;
+                    io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
+                    blackLost = true;
+                }
+            }, 10);
+        } else if (savedGameState.active === 'White') {
+            whiteTimerInterval = setInterval(() => {
+                whiteTimer -= 10;
+                if (whiteTimer <= 0 && whiteLost == false) {
+                    clearInterval(whiteTimerInterval);
+                    whiteTimer = 0;
+                    io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
+                    whiteLost = true;
+                }
+            }, 10);
+        }
     }
 }
 

@@ -44,6 +44,7 @@ export class BoardComponent implements OnInit {
         this.blackTimerFront = blackTimer;
         this.whiteBoardTimer = whiteTimer
         this.blackBoardTimer = blackTimer
+        console.log("gamelength " + savedGameState.history.length)
         this.startTimer(savedGameState);
       });
     });
@@ -74,30 +75,32 @@ export class BoardComponent implements OnInit {
   startTimer(savedGameState: GameState) {
     clearInterval(this.whiteTimerInterval);
     clearInterval(this.blackTimerInterval);
-    if (savedGameState.active === 'Black' && this.blackBoardTimer > 0) {
-      this.blackTimerInterval = setInterval(() => {
-        this.blackTimerFront -= 10;
-        if (this.blackTimerFront <= 0) {
-          clearInterval(this.blackTimerInterval);
-          this.blackTimerFront = 0;
-        }
-      }, 10);
-    } else if (savedGameState.active === 'White' && this.whiteBoardTimer > 0) {
-      this.whiteTimerInterval = setInterval(() => {
-        this.whiteTimerFront -= 10;
-        if (this.whiteTimerFront <= 0) {
-          clearInterval(this.whiteTimerInterval);
-          this.whiteTimerFront = 0;
-        }
-      }, 10);
-    } else if (this.blackBoardTimer <= 0) {
-      clearInterval(this.blackTimerInterval);
-      this.blackTimerFront = 0;
-      this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
-    } else if (this.whiteBoardTimer <= 0) {
-      clearInterval(this.whiteTimerInterval);
-      this.whiteTimerFront = 0;
-      this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
+    if (savedGameState.history.length >= 2) {
+      if (savedGameState.active === 'Black' && this.blackBoardTimer > 0) {
+        this.blackTimerInterval = setInterval(() => {
+          this.blackTimerFront -= 10;
+          if (this.blackTimerFront <= 0) {
+            clearInterval(this.blackTimerInterval);
+            this.blackTimerFront = 0;
+          }
+        }, 10);
+      } else if (savedGameState.active === 'White' && this.whiteBoardTimer > 0) {
+        this.whiteTimerInterval = setInterval(() => {
+          this.whiteTimerFront -= 10;
+          if (this.whiteTimerFront <= 0) {
+            clearInterval(this.whiteTimerInterval);
+            this.whiteTimerFront = 0;
+          }
+        }, 10);
+      } else if (this.blackBoardTimer <= 0) {
+        clearInterval(this.blackTimerInterval);
+        this.blackTimerFront = 0;
+        this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
+      } else if (this.whiteBoardTimer <= 0) {
+        clearInterval(this.whiteTimerInterval);
+        this.whiteTimerFront = 0;
+        this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
+      }
     }
   }
 
