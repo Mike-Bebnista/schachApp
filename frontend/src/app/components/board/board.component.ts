@@ -44,7 +44,7 @@ export class BoardComponent implements OnInit {
         this.blackTimerFront = blackTimer;
         this.whiteBoardTimer = whiteTimer
         this.blackBoardTimer = blackTimer
-        console.log("gamelength " + savedGameState.history.length)
+        //console.log("gamelength " + savedGameState.history.length) //Gamelength stimmt noch nicht aktuell
         this.startTimer(savedGameState);
       });
     });
@@ -64,8 +64,8 @@ export class BoardComponent implements OnInit {
 
   newGame() {
     this.socketIoService.newGame(this.gameId);
-    this.whiteTimerFront = 180000
-    this.blackTimerFront = 180000
+    this.whiteTimerFront = 0
+    this.blackTimerFront = 0
   }
 
   flipBoard() {

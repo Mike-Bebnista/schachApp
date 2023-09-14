@@ -442,6 +442,19 @@ export function calculateLegalMoves(board: BoardMap,
   return moves;
 }
 
+export function schachMattCheck(board: BoardMap, active: Colors, history: HistoryMove[], rank: number, file: number,): string {
+  for (const [squareNum, [piece, pieceColor]] of board) {
+    if (pieceColor === active) {
+      const { rank, file } = rankAndFile(squareNum)!;
+      const legalMoves = calculateLegalMoves(board, history, rank, file, true);
+      if (legalMoves.length > 0) {
+        return ("Kein Schachmatt"); // Es gibt mindestens einen legalen Zug für eine Figur dieser Farbe.
+      }
+    }
+  }
+  return ("Schachmatt " + active); // Keine Figur kann sich legal bewegen.
+}
+
 export function makeMove(board: BoardMap,
   availableMoves: Move[],
   history: HistoryMove[],
