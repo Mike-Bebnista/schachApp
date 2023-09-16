@@ -1,19 +1,28 @@
-<div class="board">
-  <ng-container *ngFor="let rank of boardDirectionArray">
-    <ng-container *ngFor="let file of boardDirectionArray">
-      <app-square [rank]="rank" [file]="file"></app-square>
+<div class="container">
+  <div class="board">
+    <ng-container *ngFor="let rank of boardDirectionArray">
+      <ng-container *ngFor="let file of boardDirectionArray">
+        <app-square [rank]="rank" [file]="file"></app-square>
+      </ng-container>
     </ng-container>
-  </ng-container>
+  </div>
+  <div class="timer-container">
+    <div class="black-timer">
+      <span>Black Timer: {{ formatTime(blackTimerFront) }}</span>
+    </div>
+    <div class="white-timer">
+      <span>White Timer: {{ formatTime(whiteTimerFront) }}</span>
+    </div>
+  </div>
 </div>
-<div class="boxNewGame">
-  <button mat-raised-button (click)="newGame()">New Game</button>
-</div>
-<div class="flipBoard">
-  <button mat-raised-button (click)="flipBoard()">Flip Board</button>
-</div>
-<div class="timer-container">
-  <div class="timer">
-    <span>White Timer: {{ formatTime(whiteTimerFront) }}</span>
-    <span>Black Timer: {{ formatTime(blackTimerFront) }}</span>
+<div class="button-container">
+  <div class="boxNewGame">
+    <button mat-raised-button (click)="newGame()"[disabled]="!schachMattBool">New Game</button>
+  </div>
+  <div class="surrender">
+    <button mat-raised-button (click)="surrender()">Surrender</button>
+  </div>
+  <div class="flipBoard">
+    <button mat-raised-button (click)="flipBoard()">Flip Board</button>
   </div>
 </div>

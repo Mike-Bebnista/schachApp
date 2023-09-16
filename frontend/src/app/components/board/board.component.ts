@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GameState } from 'src/app/models/game-state.model';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { GameService } from 'src/app/services/game.service';
+//import { resetHistory } from 'src/app/utils/moves';
 
 @Component({
   selector: 'app-board',
@@ -21,6 +22,9 @@ export class BoardComponent implements OnInit {
   timerInterval: any;
   whiteTimerInterval: any;
   blackTimerInterval: any;
+  savedGameStateHier: any;
+  savedBoardHier: any;
+  schachMattBool = false;
 
   constructor(
     private socketIoService: SocketIoService,
@@ -36,9 +40,10 @@ export class BoardComponent implements OnInit {
 
     this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
       this.gameService.setGameState(savedGameState);
+      this.savedGameStateHier = savedGameState
+      this.savedBoardHier = savedBoard
       this.gameService.setGameStateBoard(savedBoard);
       console.log("Gamestate bekommen " + performance.now())
-
       this.socketIoService.geUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;
@@ -48,6 +53,21 @@ export class BoardComponent implements OnInit {
         this.startTimer(savedGameState);
       });
     });
+
+    this.gameService.schachmattEvent.subscribe(() => {
+      this.schachMattBool = true;
+    });
+
+    this.socketIoService.onOpponentSurrendered().subscribe(() => {
+      this.snackbar.open('Dein Gegner hat aufgegeben', 'ok');
+      this.stopTimer()
+      this.schachMattBool = true;
+    });
+
+    this.socketIoService.resetHistory().subscribe(() => {
+      this.schachMattBool = false;
+      //resetHistory();
+    })
   }
 
   ngOnDestroy(): void {
@@ -66,6 +86,7 @@ export class BoardComponent implements OnInit {
     this.socketIoService.newGame(this.gameId);
     this.whiteTimerFront = 0
     this.blackTimerFront = 0
+    this.schachMattBool = false
   }
 
   flipBoard() {
@@ -73,33 +94,36 @@ export class BoardComponent implements OnInit {
   }
 
   startTimer(savedGameState: GameState) {
-    clearInterval(this.whiteTimerInterval);
-    clearInterval(this.blackTimerInterval);
-    if (savedGameState.history.length >= 2) {
-      if (savedGameState.active === 'Black' && this.blackBoardTimer > 0) {
-        this.blackTimerInterval = setInterval(() => {
-          this.blackTimerFront -= 10;
-          if (this.blackTimerFront <= 0) {
-            clearInterval(this.blackTimerInterval);
-            this.blackTimerFront = 0;
-          }
-        }, 10);
-      } else if (savedGameState.active === 'White' && this.whiteBoardTimer > 0) {
-        this.whiteTimerInterval = setInterval(() => {
-          this.whiteTimerFront -= 10;
-          if (this.whiteTimerFront <= 0) {
-            clearInterval(this.whiteTimerInterval);
-            this.whiteTimerFront = 0;
-          }
-        }, 10);
-      } else if (this.blackBoardTimer <= 0) {
-        clearInterval(this.blackTimerInterval);
-        this.blackTimerFront = 0;
-        this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
-      } else if (this.whiteBoardTimer <= 0) {
-        clearInterval(this.whiteTimerInterval);
-        this.whiteTimerFront = 0;
-        this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
+    this.stopTimer();
+    if (this.schachMattBool == false) {
+      if (savedGameState.history.length >= 2) {
+        if (savedGameState.active === 'Black' && this.blackBoardTimer > 0) {
+          this.blackTimerInterval = setInterval(() => {
+            this.blackTimerFront -= 10;
+            if (this.blackTimerFront <= 0) {
+              clearInterval(this.blackTimerInterval);
+              this.blackTimerFront = 0;
+              this.schachMattBool = true
+            }
+          }, 10);
+        } else if (savedGameState.active === 'White' && this.whiteBoardTimer > 0) {
+          this.whiteTimerInterval = setInterval(() => {
+            this.whiteTimerFront -= 10;
+            if (this.whiteTimerFront <= 0) {
+              clearInterval(this.whiteTimerInterval);
+              this.whiteTimerFront = 0;
+              this.schachMattBool = true
+            }
+          }, 10);
+        } else if (this.blackBoardTimer <= 0) {
+          clearInterval(this.blackTimerInterval);
+          this.blackTimerFront = 0;
+          this.snackbar.open('Schwarz hat durch Zeit verloren', 'ok')
+        } else if (this.whiteBoardTimer <= 0) {
+          clearInterval(this.whiteTimerInterval);
+          this.whiteTimerFront = 0;
+          this.snackbar.open('Weiß hat durch Zeit verloren', 'ok')
+        }
       }
     }
   }
@@ -112,5 +136,17 @@ export class BoardComponent implements OnInit {
     const formattedSeconds = String(seconds).padStart(2, '0');
     const formattedMilliseconds = String(milliseconds).padStart(3, '0');
     return formattedMinutes + ':' + formattedSeconds + ':' + formattedMilliseconds;
+  }
+
+  stopTimer() {
+    clearInterval(this.whiteTimerInterval);
+    clearInterval(this.blackTimerInterval);
+  }
+
+  surrender() {
+    this.schachMattBool = true
+    this.stopTimer()
+    this.snackbar.open('Du hast aufgegeben', 'ok')
+    this.socketIoService.sendSurrender();
   }
 }

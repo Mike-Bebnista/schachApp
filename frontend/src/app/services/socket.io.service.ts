@@ -61,4 +61,30 @@ export class SocketIoService {
       }
     });
   }
+
+  sendSurrender() {
+    if (this.socket) {
+      this.socket.emit('playerSurrender');
+    }
+  }
+
+  onOpponentSurrendered(): Observable<any> {
+    return new Observable(observer => {
+      if (this.socket) {
+        this.socket.on('opponentSurrendered', data => {
+          observer.next(data);
+        });
+      }
+    });
+  }
+
+  resetHistory(): Observable<any> {
+    return new Observable(observer => {
+      if (this.socket) {
+        this.socket.on('opponentSurrendered', data => {
+          observer.next(data);
+        });
+      }
+    });
+  }
 }

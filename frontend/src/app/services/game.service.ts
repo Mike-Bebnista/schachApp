@@ -8,6 +8,8 @@ import { Move, MoveActions } from '../models/move.model';
 import { PromoteDialogComponent, } from '../components/promote-dialog/promote-dialog.component';
 import { boardInitialPosition, squareNumber } from '../utils/board';
 import { calculateLegalMoves, makeMove, promote, schachMattCheck } from '../utils/moves';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -23,8 +25,9 @@ export class GameService {
     }],
     availableMoves: [],
   });
+  schachmattEvent = new Subject<void>();
 
-  constructor(private dialog: Dialog) {
+  constructor(private dialog: Dialog, private snackbar: MatSnackBar) {
   }
 
   get activeColor$(): Observable<Colors> {
@@ -134,11 +137,12 @@ export class GameService {
 
     const schachMattResult = schachMattCheck(board, active, history, rank, file);
     if (schachMattResult === "Kein Schachmatt") {
-      console.log("Kein Schachmatt");
     } else if (schachMattResult === "Schachmatt White") {
-      console.log("Schachmatt White");
+      this.snackbar.open('Schachmatt White', 'ok')
+      this.schachmattEvent.next();
     } else if (schachMattResult === "Schachmatt Black") {
-      console.log("Schachmatt Black");
+      this.snackbar.open('Schachmatt White', 'ok')
+      this.schachmattEvent.next();
     }
   }
 

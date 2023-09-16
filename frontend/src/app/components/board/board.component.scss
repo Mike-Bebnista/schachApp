@@ -1,29 +1,45 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.button-container {
+  display: flex; /* Container wird zu flex */
+  flex-direction: row; /* Die Buttons werden in einer Zeile angezeigt */
+  align-items: center; /* Zentriert die Buttons vertikal */
+}
+
 .board {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
 }
 
 .box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .timer-container {
+  margin-top: 20px;
+
+  .timer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
-  
-    .timer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      
-      span {
-        font-size: 20px;
-        margin: 5px;
-      }
+
+    span {
+      font-size: 20px;
+      margin: 5px;
     }
   }
+}
+
+.boxNewGame,
+.flipBoard,
+.surrender {
+  margin-top: 10px;
+  margin-right: 40px; /* Abstand zwischen den Buttons */
+}
