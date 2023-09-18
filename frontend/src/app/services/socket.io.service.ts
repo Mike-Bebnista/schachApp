@@ -31,7 +31,7 @@ export class SocketIoService {
   newGame(gameId: string) {
     if (this.socket) {
       this.socket.emit('newGame', { gameId: gameId })
-      console.log('Jemand hat New Game gedrückt')
+      //console.log('Jemand hat New Game gedrückt')
     }
   }
 
@@ -78,10 +78,11 @@ export class SocketIoService {
     });
   }
 
+  //Auch das hier soll gelöscht werden 
   resetHistory(): Observable<any> {
     return new Observable(observer => {
       if (this.socket) {
-        this.socket.on('opponentSurrendered', data => {
+        this.socket.on('resetHistory', data => {
           observer.next(data);
         });
       }

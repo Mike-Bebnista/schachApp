@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { GameState } from 'src/app/models/game-state.model';
 import { SocketIoService } from 'src/app/services/socket.io.service';
 import { GameService } from 'src/app/services/game.service';
-//import { resetHistory } from 'src/app/utils/moves';
 
 @Component({
   selector: 'app-board',
@@ -43,7 +42,7 @@ export class BoardComponent implements OnInit {
       this.savedGameStateHier = savedGameState
       this.savedBoardHier = savedBoard
       this.gameService.setGameStateBoard(savedBoard);
-      console.log("Gamestate bekommen " + performance.now())
+      //console.log("Gamestate bekommen " + performance.now())
       this.socketIoService.geUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;
@@ -65,8 +64,10 @@ export class BoardComponent implements OnInit {
     });
 
     this.socketIoService.resetHistory().subscribe(() => {
+      //Der kommt hier aktuell nicht rein, da ich das mit newGame im backend lösen will - Das hier soll gelöscht werden
       this.schachMattBool = false;
-      //resetHistory();
+      this.gameService.setGameState(this.savedGameStateHier);
+      console.log('Resettet: ' + JSON.stringify(this.savedGameStateHier))
     })
   }
 

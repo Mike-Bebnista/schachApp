@@ -526,7 +526,3 @@ export function promote(board: BoardMap,
 
   return { board: newBoard, entry };
 }
-/*
-export function resetHistory(): void {
-  this.history.length = 0;
-}*/

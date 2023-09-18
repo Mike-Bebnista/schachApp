@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
         socket.to(gameId).emit('joinGame', "A player joined the game!");
         io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
         io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
-        
+
         socket.on('updateGameStateBackend', ({ gameState, gameStateBoard }) => {
             backendTime = performance.now();
 
@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
             console.log('Backend Zeit: ' + backendTime + ' Millisekunden.')
         })
     });
-    
+
     socket.on('newGame', ({ gameId }) => {
         console.log('Jemand hat New Game gedrückt');
         clearInterval(whiteTimerInterval);
@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
         blackLost = false;
         io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
         io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
-        socket.broadcast.emit('resetHistory');
+        //io.to(gameId).emit('resetHistory'); //Soll gelöscht werden
     })
 
     socket.on('playerSurrender', () => {

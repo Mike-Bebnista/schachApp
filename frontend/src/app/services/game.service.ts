@@ -178,6 +178,7 @@ export class GameService {
       gameState.active = Colors.White;
     }
     currentState.active = gameState.active;
+    currentState.history = gameState.history; //Crasht nach dem reset vor dem 2 mal castlen
     this.gameStateSubject.next(currentState);
   }
 

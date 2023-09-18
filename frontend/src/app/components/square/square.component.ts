@@ -27,7 +27,7 @@ export class SquareComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private socketIoService: SocketIoService
-  ){}
+  ) { }
 
   ngOnInit(): void {
     const piece$ = this.gameService.getPieceInSquare$(this.rank, this.file)
@@ -73,7 +73,7 @@ export class SquareComponent implements OnInit {
     const piece = this.square[0].toLowerCase();
     const color = this.square[1].toLowerCase();
 
-    return `assets/icons/pieces/${ piece }-${ color }.svg`;
+    return `assets/icons/pieces/${piece}-${color}.svg`;
   }
 
   get imgAlt(): string | null {
@@ -83,7 +83,7 @@ export class SquareComponent implements OnInit {
 
     const [piece, color] = this.square;
 
-    return `${ piece } ${ color }`;
+    return `${piece} ${color}`;
   }
 
   get isCapture(): boolean {
@@ -102,9 +102,10 @@ export class SquareComponent implements OnInit {
     const gameState = this.gameService.getGameState();
     const gameStateBoard = this.gameService.getGameStateBoard();
     this.socketIoService.updateGameStateBackend({
-        gameState: gameState,
-        gameStateBoard : gameStateBoard
+      gameState: gameState,
+      gameStateBoard: gameStateBoard
     });
-    console.log("Gamestate zum backend gesendet " + performance.now())
+    //console.log("Gamestate zum backend gesendet " + performance.now())
+    console.log('History: ' + JSON.stringify(gameState.history))
   }
 }
