@@ -38,6 +38,9 @@ export class BoardComponent implements OnInit {
     this.recieveJoinedPlayers();
 
     this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
+      for (let h of savedGameState.history) {
+        h.state = new Map(h.state);
+      }
       this.gameService.setGameState(savedGameState);
       this.savedGameStateHier = savedGameState
       this.savedBoardHier = savedBoard

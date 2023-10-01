@@ -37,6 +37,9 @@ export class SocketIoService {
 
   updateGameStateBackend(data: { gameState: any, gameStateBoard: string }): void {
     if (this.socket) {
+      for (let h of data.gameState.history) {
+        h.state = Array.from(h.state);
+      }
       this.socket.emit('updateGameStateBackend', data);
       //console.log('Zum Socket geschickt: ' + JSON.stringify(data));
     }
