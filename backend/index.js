@@ -14,6 +14,7 @@ let whiteTimerInterval;
 let blackTimerInterval;
 let whiteLost = false;
 let blackLost = false;
+let gameTimeSaved;
 
 io.on("connection", (socket) => {
     socket.on('joinGame', ({ gameId }) => {
@@ -44,8 +45,8 @@ io.on("connection", (socket) => {
         clearInterval(blackTimerInterval);
         savedBoard = "[[1,[\"Rook\",\"Black\"]],[2,[\"Knight\",\"Black\"]],[3,[\"Bishop\",\"Black\"]],[4,[\"Queen\",\"Black\"]],[5,[\"King\",\"Black\"]],[6,[\"Bishop\",\"Black\"]],[7,[\"Knight\",\"Black\"]],[8,[\"Rook\",\"Black\"]],[9,[\"Pawn\",\"Black\"]],[10,[\"Pawn\",\"Black\"]],[11,[\"Pawn\",\"Black\"]],[12,[\"Pawn\",\"Black\"]],[13,[\"Pawn\",\"Black\"]],[14,[\"Pawn\",\"Black\"]],[15,[\"Pawn\",\"Black\"]],[16,[\"Pawn\",\"Black\"]],[49,[\"Pawn\",\"White\"]],[50,[\"Pawn\",\"White\"]],[51,[\"Pawn\",\"White\"]],[52,[\"Pawn\",\"White\"]],[53,[\"Pawn\",\"White\"]],[54,[\"Pawn\",\"White\"]],[55,[\"Pawn\",\"White\"]],[56,[\"Pawn\",\"White\"]],[57,[\"Rook\",\"White\"]],[58,[\"Knight\",\"White\"]],[59,[\"Bishop\",\"White\"]],[60,[\"Queen\",\"White\"]],[61,[\"King\",\"White\"]],[62,[\"Bishop\",\"White\"]],[63,[\"Knight\",\"White\"]],[64,[\"Rook\",\"White\"]]]";
         savedGameState = { "board": {}, "active": "White", "history": [{ "count": 0, "from": 0, "to": 0, "action": null, "state": {} }], "availableMoves": [{}, {}], "selectedSquare": {} };
-        whiteTimer = 180000;
-        blackTimer = 180000;
+        whiteTimer = gameTimeSaved;
+        blackTimer = gameTimeSaved;
         whiteLost = false;
         blackLost = false;
         io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
@@ -55,6 +56,11 @@ io.on("connection", (socket) => {
 
     socket.on('playerSurrender', () => {
         socket.broadcast.emit('opponentSurrendered');
+    });
+    socket.on('setTime',({ gameTime }) => {
+        gameTimeSaved = gameTime
+        whiteTimer = gameTime;
+        blackTimer = gameTime;
     });
 });
 

@@ -91,4 +91,10 @@ export class SocketIoService {
       }
     });
   }
+
+  setTimer(gameTime: number) {
+    if (this.socket) {
+      this.socket.emit('setTimer', {gameTime: gameTime})
+    }
+  }
 }

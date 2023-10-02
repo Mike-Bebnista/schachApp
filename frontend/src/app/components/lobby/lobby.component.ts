@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { SocketIoService } from 'src/app/services/socket.io.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -9,10 +10,11 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class LobbyComponent {
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private socketIoService: SocketIoService,){}
 
-  createGame(){
+  createGame(gameTime: number){
     const uuid = uuidv4();
     this.router.navigate(['/board', uuid]);
+    this.socketIoService.connect(gameTime.toString());
   }
 }
