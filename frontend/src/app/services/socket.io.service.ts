@@ -92,9 +92,9 @@ export class SocketIoService {
     });
   }
 
-  setTimer(gameTime: number) {
+  setTime(gameTime: number) {
     if (this.socket) {
-      this.socket.emit('setTimer', {gameTime: gameTime})
+      this.socket.emit('setTime', {gameTime: gameTime})
     }
   }
 }

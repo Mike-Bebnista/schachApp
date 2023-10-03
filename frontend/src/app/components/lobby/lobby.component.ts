@@ -15,6 +15,7 @@ export class LobbyComponent {
   createGame(gameTime: number){
     const uuid = uuidv4();
     this.router.navigate(['/board', uuid]);
-    this.socketIoService.connect(gameTime.toString());
+    this.socketIoService.connect(uuid);
+    this.socketIoService.setTime(gameTime);
   }
 }
