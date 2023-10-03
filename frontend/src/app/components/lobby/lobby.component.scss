@@ -15,13 +15,14 @@
 }
 
 .button-group button {
-    min-width: 100px;
+    min-width: 150px;
     padding: 10px 20px;
     background-color: #373430;
     color: #979797;
     border: none;
     font-size: 20px;
     text-align: center;
+    height: auto;
 }
 
 .button-group button:hover {
