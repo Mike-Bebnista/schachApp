@@ -10,9 +10,9 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class LobbyComponent {
 
-  constructor(private router: Router, private socketIoService: SocketIoService,){}
+  constructor(private router: Router, private socketIoService: SocketIoService,) { }
 
-  createGame(gameTime: number){
+  createGame(gameTime: number) {
     const uuid = uuidv4();
     this.router.navigate(['/board', uuid]);
     this.socketIoService.connect(uuid);

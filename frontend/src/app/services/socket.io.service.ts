@@ -55,7 +55,7 @@ export class SocketIoService {
     });
   }
 
-  geUpdateTimers(): Observable<{ whiteTimer: number, blackTimer: number }> {
+  getUpdateTimers(): Observable<{ whiteTimer: number, blackTimer: number }> {
     return new Observable((observer) => {
       if (this.socket) {
         this.socket.on('updateTimers', ({ whiteTimer, blackTimer }) => {
@@ -81,20 +81,9 @@ export class SocketIoService {
     });
   }
 
-  //Auch das hier soll gelöscht werden 
-  resetHistory(): Observable<any> {
-    return new Observable(observer => {
-      if (this.socket) {
-        this.socket.on('resetHistory', data => {
-          observer.next(data);
-        });
-      }
-    });
-  }
-
   setTime(gameTime: number) {
     if (this.socket) {
-      this.socket.emit('setTime', {gameTime: gameTime})
+      this.socket.emit('setTime', { gameTime: gameTime })
     }
   }
 }

@@ -51,14 +51,13 @@ io.on("connection", (socket) => {
         blackLost = false;
         io.to(gameId).emit('gameStateVomSocket', { savedGameState, savedBoard });
         io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
-        //io.to(gameId).emit('resetHistory'); //Soll gelöscht werden
     })
 
     socket.on('playerSurrender', () => {
         socket.broadcast.emit('opponentSurrendered');
         console.log("Jemand hat Surrender gedrückt")
     });
-    socket.on('setTime',({ gameTime }) => {
+    socket.on('setTime', ({ gameTime }) => {
         console.log("Gametime bekommen: " + gameTime)
         gameTimeSaved = gameTime
         whiteTimer = gameTime;

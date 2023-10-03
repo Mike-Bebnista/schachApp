@@ -34,19 +34,21 @@ export class BoardComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
-    
+
     this.recieveJoinedPlayers();
 
     this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
       for (let h of savedGameState.history) {
-        h.state = new Map(h.state);
+        if (Object.keys(h.state).length > 0) {
+          h.state = new Map(h.state);
+        }
       }
       this.gameService.setGameState(savedGameState);
       this.savedGameStateHier = savedGameState
       this.savedBoardHier = savedBoard
       this.gameService.setGameStateBoard(savedBoard);
       //console.log("Gamestate bekommen " + performance.now())
-      this.socketIoService.geUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
+      this.socketIoService.getUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;
         this.whiteBoardTimer = whiteTimer
@@ -65,13 +67,6 @@ export class BoardComponent implements OnInit {
       this.stopTimer()
       this.schachMattBool = true;
     });
-
-    this.socketIoService.resetHistory().subscribe(() => {
-      //Der kommt hier aktuell nicht rein, da ich das mit newGame im backend lösen will - Das hier soll gelöscht werden
-      this.schachMattBool = false;
-      this.gameService.setGameState(this.savedGameStateHier);
-      console.log('Resettet: ' + JSON.stringify(this.savedGameStateHier))
-    })
   }
 
   ngOnDestroy(): void {
