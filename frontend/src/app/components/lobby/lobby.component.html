@@ -1,8 +1,12 @@
-<div class="box">
-    <button mat-raised-button (click)="createGame(30000)">Create Game (30s)</button>
-    <button mat-raised-button (click)="createGame(60000)">Create Game (1 min)</button>
-    <button mat-raised-button (click)="createGame(180000)">Create Game (3 min)</button>
-    <button mat-raised-button (click)="createGame(300000)">Create Game (5 min)</button>
-    <button mat-raised-button (click)="createGame(600000)">Create Game (10 min)</button>
-    <button mat-raised-button (click)="createGame(900000)">Create Game (15 min)</button>
+<div class="button-container">
+    <div class="button-group">
+        <button mat-raised-button (click)="createGame(60000)">1 Min Bullet </button>
+        <button mat-raised-button (click)="createGame(120000)">2 Min Bullet</button>
+        <button mat-raised-button (click)="createGame(180000)">3 Min Blitz</button>
+    </div>
+    <div class="button-group">
+        <button mat-raised-button (click)="createGame(300000)">5 Min Blitz</button>
+        <button mat-raised-button (click)="createGame(600000)">10 Min Rapid</button>
+        <button mat-raised-button (click)="createGame(900000)">15 Min Classical</button>
+    </div>
 </div>

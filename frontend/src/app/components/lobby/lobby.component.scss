@@ -1,6 +1,30 @@
-.box{
+.button-container{
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 100%;
+    flex-direction: column;
+    gap: 20px;
+    border: 2px solid #383837;
+    padding: 10px;
+    background-color: #262421;
+}
+
+.button-group{
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.button-group button {
+    min-width: 100px;
+    padding: 10px 20px;
+    background-color: #373430;
+    color: #979797;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+}
+
+.button-group button:hover {
+    background: linear-gradient(to bottom, hsl(37, 7%, 25%), hsl(37, 5%, 22%) 100%);
+    color: #ccc;
 }

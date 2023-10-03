@@ -5,9 +5,28 @@
 }
 
 .button-container {
-  display: flex; /* Container wird zu flex */
-  flex-direction: row; /* Die Buttons werden in einer Zeile angezeigt */
-  align-items: center; /* Zentriert die Buttons vertikal */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.button-item button {
+  min-width: 100px;
+  padding: 10px 20px;
+  background-color: #373430;
+  color: #979797;
+  border: none;
+  font-size: 20px;
+  text-align: center;
+}
+
+.button-item button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+.button-item button:hover {
+  background: linear-gradient(to bottom, hsl(37, 7%, 25%), hsl(37, 5%, 22%) 100%);
+  color: #ccc;
 }
 
 .board {
@@ -22,24 +41,18 @@
   height: 100%;
 }
 
-.timer-container {
-  margin-top: 20px;
-
-  .timer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    span {
-      font-size: 20px;
-      margin: 5px;
-    }
-  }
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.boxNewGame,
-.flipBoard,
-.surrender {
+.timer-item {
+  margin: 5px;
+  font-size: 20px;
+}
+
+.button-item {
   margin-top: 10px;
-  margin-right: 40px; /* Abstand zwischen den Buttons */
+  margin-right: 40px;
 }
