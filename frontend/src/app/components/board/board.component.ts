@@ -34,9 +34,9 @@ export class BoardComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
-
+    this.socketIoService.connect(this.gameId);
     this.recieveJoinedPlayers();
-
+    
     this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
       for (let h of savedGameState.history) {
         if (Object.keys(h.state).length > 0) {
