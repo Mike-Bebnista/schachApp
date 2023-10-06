@@ -134,7 +134,7 @@ export class BoardComponent implements OnInit {
     const formattedMinutes = String(minutes).padStart(2, '0');
     const formattedSeconds = String(seconds).padStart(2, '0');
     const formattedMilliseconds = String(milliseconds).padStart(3, '0');
-    return formattedMinutes + ':' + formattedSeconds + ':' + formattedMilliseconds;
+    return `${formattedMinutes}:${formattedSeconds}:${formattedMilliseconds.slice(0, 2)}`
   }
 
   stopTimer() {
