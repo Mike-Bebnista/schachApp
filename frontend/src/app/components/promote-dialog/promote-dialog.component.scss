@@ -1,9 +1,18 @@
-:host > div {
-    padding: 16px;
-    display: flex;
-    gap: 8px;
-    > button {
-      cursor: pointer;
-    }
-  }
-  
+:host>div {
+  padding: 2vw;
+  display: flex;
+  gap: 1vw;
+  background: #262421;
+}
+
+:host>div>button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background: #edd6b0;
+}
+
+:host>div>button>img {
+  width: 4vw;
+  height: 4vw;
+}
