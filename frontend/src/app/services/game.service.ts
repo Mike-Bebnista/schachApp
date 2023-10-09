@@ -138,10 +138,10 @@ export class GameService {
     const schachMattResult = schachMattCheck(board, active, history, rank, file);
     if (schachMattResult === "Kein Schachmatt") {
     } else if (schachMattResult === "Schachmatt White") {
-      this.snackbar.open('Schachmatt White', 'ok')
+      this.snackbar.open('Schwarz hat durch Schachmatt gewonnen', 'ok')
       this.schachmattEvent.next();
     } else if (schachMattResult === "Schachmatt Black") {
-      this.snackbar.open('Schachmatt White', 'ok')
+      this.snackbar.open('Weiß hat durch Schachmatt gewonnen', 'ok')
       this.schachmattEvent.next();
     }
   }
@@ -178,7 +178,7 @@ export class GameService {
       gameState.active = Colors.White;
     }
     currentState.active = gameState.active;
-    currentState.history = gameState.history; //Crasht nach dem reset vor dem 2 mal castlen
+    currentState.history = gameState.history;
     this.gameStateSubject.next(currentState);
   }
 

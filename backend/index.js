@@ -54,6 +54,8 @@ io.on("connection", (socket) => {
     })
 
     socket.on('playerSurrender', () => {
+        whiteLost = true;
+        blackLost = true;
         socket.broadcast.emit('opponentSurrendered');
         console.log("Jemand hat Surrender gedrückt")
     });
@@ -69,20 +71,20 @@ function startNextPlayerTimer(gameId) {
     clearInterval(whiteTimerInterval);
     clearInterval(blackTimerInterval);
     if (savedGameState.history.length >= 2) {
-        if (savedGameState.active === 'Black') {
+        if (savedGameState.active === 'Black' && blackLost == false) {
             blackTimerInterval = setInterval(() => {
                 blackTimer -= 10;
-                if (blackTimer <= 0 && blackLost == false) {
+                if (blackTimer <= 0) {
                     clearInterval(blackTimerInterval);
                     blackTimer = 0;
                     io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });
                     blackLost = true;
                 }
             }, 10);
-        } else if (savedGameState.active === 'White') {
+        } else if (savedGameState.active === 'White' && whiteLost == false) {
             whiteTimerInterval = setInterval(() => {
                 whiteTimer -= 10;
-                if (whiteTimer <= 0 && whiteLost == false) {
+                if (whiteTimer <= 0) {
                     clearInterval(whiteTimerInterval);
                     whiteTimer = 0;
                     io.to(gameId).emit('updateTimers', { whiteTimer, blackTimer });

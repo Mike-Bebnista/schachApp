@@ -35,8 +35,8 @@ export class BoardComponent implements OnInit {
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
     this.socketIoService.connect(this.gameId);
-    this.recieveJoinedPlayers();
-    
+    this.receiveJoinedPlayers();
+
     this.socketIoService.getGameStateFromSocket().subscribe(({ savedGameState, savedBoard }: { savedGameState: GameState, savedBoard: string }) => {
       for (let h of savedGameState.history) {
         if (Object.keys(h.state).length > 0) {
@@ -65,7 +65,6 @@ export class BoardComponent implements OnInit {
     this.socketIoService.onOpponentSurrendered().subscribe(() => {
       this.snackbar.open('Dein Gegner hat aufgegeben', 'ok');
       this.stopTimer()
-      this.schachMattBool = true;
     });
   }
 
@@ -73,7 +72,7 @@ export class BoardComponent implements OnInit {
     clearInterval(this.timerInterval);
   }
 
-  recieveJoinedPlayers() {
+  receiveJoinedPlayers() {
     this.socketIoService.receivedJoinedPlayers().subscribe((message: string) => {
       this.snackbar.open(message, '', {
         duration: 1500,
