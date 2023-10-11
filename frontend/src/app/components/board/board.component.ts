@@ -22,7 +22,6 @@ export class BoardComponent implements OnInit {
   whiteTimerInterval: any;
   blackTimerInterval: any;
   savedGameStateHier: any;
-  savedBoardHier: any;
   schachMattBool = false;
 
   constructor(
@@ -44,8 +43,6 @@ export class BoardComponent implements OnInit {
         }
       }
       this.gameService.setGameState(savedGameState);
-      this.savedGameStateHier = savedGameState
-      this.savedBoardHier = savedBoard
       this.gameService.setGameStateBoard(savedBoard);
       //console.log("Gamestate bekommen " + performance.now())
       this.socketIoService.getUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
