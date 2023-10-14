@@ -41,10 +41,10 @@ export class BoardComponent implements OnInit {
           h.state = new Map(h.state);
         }
       }
-      this.gameService.setGameState(savedGameState);
-      this.gameService.setGameStateBoard(savedBoard);
+      this.gameService.setGameState(savedGameState, savedBoard);
       console.log("Gamestate bekommen " + performance.now())
       console.log('History: ' + JSON.stringify(savedGameState.history))
+
       this.socketIoService.getUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;

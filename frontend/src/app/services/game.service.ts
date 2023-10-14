@@ -172,20 +172,19 @@ export class GameService {
     return this.boardMapToString(this.gameStateSubject.value.board);
   }
 
-  setGameState(gameState: GameState) {
+  setGameState(gameState: GameState, gameStateBoard: string) {
     const currentState = this.gameStateSubject.getValue();
     if (gameState.active == undefined) {
       gameState.active = Colors.White;
     }
     currentState.active = gameState.active;
     currentState.history = gameState.history;
+    
     this.gameStateSubject.next(currentState);
-  }
 
-  setGameStateBoard(gameStateBoard: string) {
     const boardMap = this.stringToBoardMap(gameStateBoard);
-    const currentState = this.gameStateSubject.getValue();
     currentState.board = boardMap;
+    currentState.history[0].state = boardMap;
     this.gameStateSubject.next(currentState);
   }
 }
