@@ -21,7 +21,6 @@ export class BoardComponent implements OnInit {
   timerInterval: any;
   whiteTimerInterval: any;
   blackTimerInterval: any;
-  savedGameStateHier: any;
   schachMattBool = false;
 
   constructor(
@@ -44,13 +43,13 @@ export class BoardComponent implements OnInit {
       }
       this.gameService.setGameState(savedGameState);
       this.gameService.setGameStateBoard(savedBoard);
-      //console.log("Gamestate bekommen " + performance.now())
+      console.log("Gamestate bekommen " + performance.now())
+      console.log('History: ' + JSON.stringify(savedGameState.history))
       this.socketIoService.getUpdateTimers().subscribe(({ whiteTimer, blackTimer }) => {
         this.whiteTimerFront = whiteTimer;
         this.blackTimerFront = blackTimer;
         this.whiteBoardTimer = whiteTimer
         this.blackBoardTimer = blackTimer
-        //console.log("gamelength " + savedGameState.history.length) //Gamelength stimmt noch nicht aktuell
         this.startTimer(savedGameState);
       });
     });

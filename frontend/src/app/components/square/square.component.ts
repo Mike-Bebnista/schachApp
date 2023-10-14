@@ -105,7 +105,6 @@ export class SquareComponent implements OnInit {
       gameState: gameState,
       gameStateBoard: gameStateBoard
     });
-    //console.log("Gamestate zum backend gesendet " + performance.now())
-    console.log('History: ' + JSON.stringify(gameState.history))
+    console.log("Gamestate zum backend gesendet " + performance.now())
   }
 }
